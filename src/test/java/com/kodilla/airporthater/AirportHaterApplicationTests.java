@@ -1,10 +1,10 @@
-package com.kodilla.airporthater_backend;
+package com.kodilla.airporthater;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AirportHaterBackendApplicationTests {
+class AirportHaterApplicationTests {
 
     @Test
     void contextLoads() {

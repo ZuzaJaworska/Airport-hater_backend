@@ -16,8 +16,24 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.springframework:spring-core'
+    implementation 'org.springframework.boot:spring-boot-loader'
     implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'com.google.code.gson:gson'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    runtimeOnly 'com.mysql:mysql-connector-j:8.2.0'
+    implementation 'org.springframework.boot:spring-boot-starter-logging'
 }
 
 tasks.named('test') {
