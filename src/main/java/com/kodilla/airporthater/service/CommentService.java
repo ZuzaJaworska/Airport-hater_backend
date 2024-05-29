@@ -6,12 +6,12 @@ import com.kodilla.airporthater.exception.exceptions.*;
 import com.kodilla.airporthater.repository.AirportScoreAvgRepository;
 import com.kodilla.airporthater.repository.CommentRepository;
 import com.kodilla.airporthater.scheduler.EmailScheduler;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -19,6 +19,7 @@ import java.util.List;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final AirportService airportService;
     private final AirportScoreAvgRepository airportScoreAvgRepository;
 
     private static final Logger log = LoggerFactory.getLogger(CommentService.class);
@@ -46,11 +47,10 @@ public class CommentService {
     public Comment createComment(Comment comment) throws FailedToCreateCommentException {
         try {
             Comment savedComment = commentRepository.save(comment);
-            // Sprawdza, czy zapis się powiódł
+            // Checks if the save was successful
             if (savedComment == null) {
                 throw new FailedToCreateCommentException();
             }
-            // Aktualizacja oceny lotniska po dodaniu komentarza
             updateAirportScoreForComment(comment.getAirport().getIataCode());
             return savedComment;
         } catch (Exception e) {
@@ -61,13 +61,13 @@ public class CommentService {
 
     //----------------------------------------------------
 
-    // Metoda do obliczania średniej arytmetycznej COMMENT_SCORE dla danego lotniska
+    // Method to calculate the arithmetic mean of COMMENT_SCORE for a specific airport
     public double calculateAverageCommentScoreForAirport(String iataCode) {
         return commentRepository.findAverageCommentScoreForAirport(iataCode);
     }
 
-    // Metoda aktualizująca AIRPORT_SCORE na podstawie komentarzy dla danego lotniska
-    private void updateAirportScoreForComment(String iataCode) throws AirportScoreNotFoundException {
+    // Method for updating AIRPORT_SCORE based on comments for a specific airport
+    void updateAirportScoreForComment(String iataCode) throws AirportScoreNotFoundException {
         double averageCommentScore = calculateAverageCommentScoreForAirport(iataCode);
         AirportScoreAvg airportScoreAvg = airportScoreAvgRepository.findByIataCode(iataCode)
                 .orElseThrow(AirportScoreNotFoundException::new);
@@ -80,17 +80,13 @@ public class CommentService {
 
     //----------------------------------------------------
 
-    public void deleteCommentsForAirport(String iataCode) {
-        List<Comment> comments = commentRepository.findByAirportIataCode(iataCode)
-                .orElse(Collections.emptyList());
-        commentRepository.deleteAll(comments);
-    }
-
-    public void deleteComment(Long commentId) throws CommentNotFoundException {
-        Comment comment = commentRepository.findById(commentId)
+    @Transactional
+    public void deleteComment(Long id) throws CommentNotFoundException {
+        Comment comment = commentRepository.findById(id)
                 .orElseThrow(CommentNotFoundException::new);
         String iataCode = comment.getAirport().getIataCode();
-        commentRepository.deleteById(commentId);
-        updateAirportScoreForComment(iataCode);
+        commentRepository.delete(comment);
+        airportService.updateAirportRating(iataCode);
     }
 }
+

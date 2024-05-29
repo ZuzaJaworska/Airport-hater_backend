@@ -40,9 +40,9 @@ public class CommentMapper {
 
     public Comment mapToComment(CommentDto commentDto) {
         User user = userRepository.findById(commentDto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(IllegalArgumentException::new);
         Airport airport = airportRepository.findByIataCode(commentDto.getAirportId())
-                .orElseThrow(() -> new IllegalArgumentException("Airport not found"));
+                .orElseThrow(IllegalArgumentException::new);
 
         return Comment.builder()
                 .id(commentDto.getId())

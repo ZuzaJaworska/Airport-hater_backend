@@ -15,7 +15,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     Optional<List<Comment>> findByAirportIataCode(String iataCode);
 
-    //    obliczenie średniej oceny (score) dla komentarzy powiązanych z określonym lotniskiem
+    // calculate the average score for comments associated with a specific airport
     @Query("SELECT AVG(c.score) FROM Comment c WHERE c.airport.iataCode = :iataCode")
     double findAverageCommentScoreForAirport(String iataCode);
 }

@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @Entity
@@ -12,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-//@EntityListeners(AirportListener.class)
 public class Airport {
 
     @Id
@@ -30,7 +30,7 @@ public class Airport {
 
     @OneToOne(mappedBy = "airport",
             cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             optional = false)
     @ToString.Exclude
     private AirportScoreAvg airportScoreAvg;
@@ -38,6 +38,7 @@ public class Airport {
     @OneToMany(
             targetEntity = Comment.class,
             mappedBy = "airport",
+            cascade = CascadeType.ALL,
             fetch = FetchType.EAGER
     )
     @Builder.Default
@@ -52,5 +53,18 @@ public class Airport {
         if (airportScoreAvg != null) {
             airportScoreAvg.setAirport(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Airport airport = (Airport) o;
+        return Objects.equals(iataCode, airport.iataCode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(iataCode, icaoCode, name, city, airportScoreAvg, comments);
     }
 }

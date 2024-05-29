@@ -126,24 +126,6 @@ class UserTest {
         assertEquals(updatedUser.getPassword(), userResult.get().getPassword());
     }
 
-//    @Test
-//    public void testBlockUser() {
-//        // Given
-//        userRepository.save(userOne);
-//        userRepository.save(userTwo);
-//
-//        // When
-//
-//        // Then
-//    }
-
-//    @Test
-//    public void testUnblockUser() {
-//        // Given
-//        // When
-//        // Then
-//    }
-//
     @Test
     public void testDeleteUserById() {
         // Given
@@ -157,15 +139,5 @@ class UserTest {
         assertEquals(1, userRepository.findAll().size());
         assertTrue(userRepository.findAll().contains(userOne));
         assertFalse(userRepository.findAll().contains(userTwo));
-
     }
-
-//    @Test
-//    public void testDeleteCommentsOfUserWhenDeleteUser() {
-//        // Given
-//        // When
-//        // Then
-//    }
-
-
 }

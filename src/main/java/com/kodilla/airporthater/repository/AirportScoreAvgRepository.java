@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface AirportScoreAvgRepository extends JpaRepository<AirportScoreAvg, Long> {
-
+public interface AirportScoreAvgRepository extends JpaRepository<AirportScoreAvg, String> {
     Optional<AirportScoreAvg> findByIataCode(String iataCode);
 }

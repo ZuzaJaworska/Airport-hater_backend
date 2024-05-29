@@ -53,8 +53,9 @@ public class EmailScheduler {
                 new Email(
                         adminConfig.getAdminMail(),
                         SUBJECTLOWSCORE,
-                        "Something about a really bad airport " +
-                                airportScoreAvgRepository.findByIataCode(iataCode).get().getScoreAvg()
+                        "Another airport is rated below 3.0 -  " + airportRepository.findByIataCode(iataCode).get().getName() +
+                                " with score = " + airportScoreAvgRepository.findByIataCode(iataCode).get().getScoreAvg() +
+                                "!\nIt has to be a really bad airport..."
                 )
         );
     }
@@ -64,10 +65,10 @@ public class EmailScheduler {
                 new Email(
                         adminConfig.getAdminMail(),
                         SUBJECTNEWAIRPORT,
-                        "Something about new airport " + iataCode +
-                                airportRepository.findByIataCode(iataCode).get().getName() +
-                                airportRepository.findByIataCode(iataCode).get().getCity() +
-                                airportRepository.findByIataCode(iataCode).get().getIcaoCode()
+                        "There's new airport in our database - " + airportRepository.findByIataCode(iataCode).get().getName() +
+                                "(IATA: " + iataCode +
+                                ", ICAO: " + airportRepository.findByIataCode(iataCode).get().getIcaoCode() +
+                                ") in " + airportRepository.findByIataCode(iataCode).get().getCity() + "!"
                 )
         );
     }

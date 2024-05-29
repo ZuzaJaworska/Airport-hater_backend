@@ -3,6 +3,7 @@ package com.kodilla.airporthater.service;
 import com.kodilla.airporthater.domain.entity.User;
 import com.kodilla.airporthater.exception.exceptions.UserNotFoundException;
 import com.kodilla.airporthater.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+//    private final SecurityService securityService;
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -39,7 +41,15 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional
     public void deleteUser(Long id) throws UserNotFoundException {
-        userRepository.deleteById(id);
+        User user = userRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+        userRepository.delete(user);
     }
+
+    // Metoda wywołująca metodę z SecurityService w celu uzyskania identyfikatora użytkownika
+//    public Long getCurrentUserId() {
+//        return securityService.getCurrentUserId();
+//    }
 }

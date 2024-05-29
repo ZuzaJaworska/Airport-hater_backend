@@ -27,22 +27,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(FailedToBlockUserException.class)
     public ResponseEntity<Object> handleFailedToBlockUserException(FailedToBlockUserException exception) {
-        return new ResponseEntity<>("FailedToBlockUser: " + exception, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Failed to block user: " + exception, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(FailedToCreateAirportException.class)
     public ResponseEntity<Object> handleFailedToCreateAirportException(FailedToCreateAirportException exception) {
-        return new ResponseEntity<>("FailedToCreateAirport: " + exception, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Failed to create airport: " + exception, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(FailedToCreateCommentException.class)
-    public ResponseEntity<String> handleFailedToCreateCommentException(FailedToCreateCommentException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create comment: " + e.getMessage());
+    public ResponseEntity<String> handleFailedToCreateCommentException(FailedToCreateCommentException exception) {
+        return new ResponseEntity<>("Failed to create comment: " + exception, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(FailedToCreateUserException.class)
     public ResponseEntity<Object> handleFailedToCreateUserException(FailedToCreateUserException exception) {
-        return new ResponseEntity<>("FailedToCreateUser: " + exception, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Failed to create user: " + exception, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserNotFoundException.class)

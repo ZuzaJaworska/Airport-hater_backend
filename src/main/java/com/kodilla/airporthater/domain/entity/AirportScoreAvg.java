@@ -3,6 +3,8 @@ package com.kodilla.airporthater.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Objects;
+
 @Data
 @Entity
 @Table(name = "AIRPORTS_SCORES")
@@ -12,7 +14,7 @@ import lombok.*;
 public class AirportScoreAvg {
 
     @Id
-    @Column(name = "IATA_CODE", unique = true)
+    @Column(name = "IATA_CODE", unique = true, nullable = false)
     private String iataCode;
 
     @Column(name = "AIRPORT_SCORE")
@@ -21,7 +23,7 @@ public class AirportScoreAvg {
 
     @Setter
     @OneToOne
-    @JoinColumn(name = "IATA_CODE", referencedColumnName = "IATA_CODE"/*, insertable = false*/)
+    @JoinColumn(name = "IATA_CODE", referencedColumnName = "IATA_CODE", insertable = false, updatable = false)
     @ToString.Exclude
     private Airport airport;
 
@@ -30,7 +32,6 @@ public class AirportScoreAvg {
         this.scoreAvg = scoreAvg;
     }
 
-    // Metoda do aktualizacji AIRPORT_SCORE
     public void updateAirportScoreAvg(double newScoreAvg) {
         this.scoreAvg = newScoreAvg;
     }

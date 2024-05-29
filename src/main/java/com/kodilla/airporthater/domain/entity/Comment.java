@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
 public class Comment {
 
     @Id
@@ -35,11 +34,32 @@ public class Comment {
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "AIRPORT_ID", nullable = false)
     private Airport airport;
+
+    public Comment(Long id, String title, String body, int score, User user) {
+        this.id = id;
+        this.title = title;
+        this.body = body;
+        this.score = score;
+        this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                ", createdAt=" + createdAt +
+                ", score=" + score +
+                ", body='" + body + '\'' +
+                ", title='" + title + '\'' +
+                ", id=" + id +
+                ", user=" + user +
+                '}';
+    }
+
 }

@@ -2,9 +2,11 @@ package com.kodilla.airporthater.service;
 
 import com.kodilla.airporthater.domain.entity.Airport;
 import com.kodilla.airporthater.domain.entity.AirportScoreAvg;
+import com.kodilla.airporthater.domain.entity.Comment;
 import com.kodilla.airporthater.exception.exceptions.AirportNotFoundException;
 import com.kodilla.airporthater.exception.exceptions.FailedToCreateAirportException;
 import com.kodilla.airporthater.repository.AirportRepository;
+import com.kodilla.airporthater.repository.CommentRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -19,7 +21,7 @@ import java.util.List;
 public class AirportService {
 
     private final AirportRepository airportRepository;
-    private final CommentService commentService;
+    private final CommentRepository commentRepository;
 
     private static final Logger log = LoggerFactory.getLogger(AirportService.class);
 
@@ -58,9 +60,32 @@ public class AirportService {
         }
     }
 
+    public void updateAirportRating(String iataCode) {
+        List<Comment> comments = commentRepository.findByAirportIataCode(iataCode)
+                .orElseThrow(AirportNotFoundException::new);
+        double averageScore = comments.stream()
+                .mapToDouble(Comment::getScore)
+                .average()
+                .orElse(0.0);
+
+        Airport airport = airportRepository.findByIataCode(iataCode)
+                .orElseThrow(AirportNotFoundException::new);
+        AirportScoreAvg airportScoreAvg = airport.getAirportScoreAvg();
+        if (airportScoreAvg != null) {
+            airportScoreAvg.updateAirportScoreAvg(averageScore);
+        } else {
+            airportScoreAvg = new AirportScoreAvg(iataCode, averageScore);
+            airport.setAirportScoreAvg(airportScoreAvg);
+        }
+        airportRepository.save(airport);
+    }
+
     public void deleteAirport(String iataCode) throws AirportNotFoundException {
-        Airport airport = getAirportByIataCode(iataCode);
-        commentService.deleteCommentsForAirport(airport.getIataCode());
+        Airport airport = airportRepository.findByIataCode(iataCode)
+                .orElseThrow(AirportNotFoundException::new);
+        List<Comment> airportComments = airport.getComments();
+        commentRepository.deleteAll(airportComments);
+        airportComments.forEach(comment -> comment.getUser().getComments().remove(comment));
         airportRepository.delete(airport);
     }
 }

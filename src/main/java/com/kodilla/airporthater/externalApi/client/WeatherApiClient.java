@@ -50,13 +50,9 @@ public class WeatherApiClient {
 
         LOGGER.info("Weather data response: {}", responseBody);
 
-        // jak zrobię frontend to trzy linijki do wywalenia, bo nie jest potrzebna nazwa miasta w odpowiedzi
-        // wtedy trzeba zmienić WeatherResponseDto w klasie dto i tutaj
         if (responseBody != null && responseBody.containsKey("location")) {
             Map<String, Object> location = (Map<String, Object>) responseBody.get("location");
             String city = (String) location.get("region");
-//        }
-//        if (responseBody != null && responseBody.containsKey("current")) {
             Map<String, Object> currentWeather = (Map<String, Object>) responseBody.get("current");
             Map<String, Object> condition = (Map<String, Object>) currentWeather.get("condition");
             String weather = (String) condition.get("text");
